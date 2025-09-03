@@ -1,0 +1,11 @@
+body,
+button,
+input,
+select,
+textarea {
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  @apply bg-white text-black;
+}
