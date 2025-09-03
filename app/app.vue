@@ -21,18 +21,18 @@
         <InputText placeholder="Search..." v-model="searchTerm" />
       </div>
 
-      <Card>
-        <p>
-          <strong>File:</strong> {{ fileData.file.name }} ({{
-            (fileData.file.size / 1024).toFixed(2)
-          }}
-          KB)
-        </p>
-        <p>
-          <strong>Rows:</strong> {{ filteredRows.length }} |
-          <strong>Columns:</strong> {{ headers.length }}
-        </p>
-      </Card>
+      <p>
+        <strong>File:</strong> {{ fileData.file.name }} ({{
+          (fileData.file.size / 1024).toFixed(2)
+        }}
+        KB)
+      </p>
+      <p>
+        <strong>Rows:</strong> {{ filteredRows.length }} | <br />
+        <strong>Columns:</strong> {{ headers.length }} | <br />
+        <strong>Date:</strong>
+        {{ new Date().toLocaleDateString() }}
+      </p>
 
       <DataTable :value="paginatedRows">
         <Column
