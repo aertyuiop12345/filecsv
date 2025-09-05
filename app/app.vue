@@ -1,51 +1,86 @@
 <template>
-  <div>
-    <div v-if="!fileData">
-      <FileUpload
-        name="file"
-        accept=".csv"
-        customUpload
-        :auto="true"
-        :chooseLabel="'Choose CSV'"
-        @select="(e) => handleFileSelect(e.files[0])"
-      />
-    </div>
-
-    <div v-else class="space-y-4">
-      <div class="flex gap-2">
-        <Button
-          label="Upload Another File"
-          icon="pi pi-refresh"
-          @click="handleReset"
+  <div class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6 space-y-8">
+      <!-- Upload -->
+      <div
+        v-if="!fileData"
+        class="flex flex-col items-center justify-center py-20"
+      >
+        <FileUpload
+          name="file"
+          accept=".csv"
+          customUpload
+          :auto="true"
+          :chooseLabel="'Choose CSV'"
+          @select="(e) => handleFileSelect(e.files[0])"
         />
-        <InputText placeholder="Search..." v-model="searchTerm" />
+        <p class="text-gray-500 mt-4">Please upload a CSV file to proceed.</p>
       </div>
 
-      <p>
-        <strong>File:</strong> {{ fileData.file.name }} ({{
-          (fileData.file.size / 1024).toFixed(2)
-        }}
-        KB)
-      </p>
-      <p>
-        <strong>Rows:</strong> {{ filteredRows.length }} | <br />
-        <strong>Columns:</strong> {{ headers.length }} | <br />
-        <strong>Date:</strong>
-        {{ new Date().toLocaleDateString() }}
-      </p>
+      <!-- File Details and Table -->
+      <div v-else class="space-y-8">
+        <!-- Actions and File Info -->
+        <div
+          class="flex flex-col md:flex-row md:items-start md:justify-between gap-6"
+        >
+          <!-- Buttons -->
+          <div class="flex gap-2">
+            <Button
+              label="Upload Another File"
+              icon="pi pi-refresh"
+              class="p-button-secondary"
+              @click="handleReset"
+            />
+            <InputText
+              placeholder="Search..."
+              v-model="searchTerm"
+              class="border border-gray-300 rounded px-3 py-2 w-full md:w-64"
+            />
+          </div>
 
-      <DataTable :value="paginatedRows">
-        <Column
-          v-for="(header, i) in headers"
-          :key="i"
-          :field="i.toString()"
-          :header="header"
-          :body="(row, column) => row[column.field]"
-        />
-      </DataTable>
+          <!-- File Details Card -->
+          <div
+            class="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-sm text-sm text-gray-700 w-full md:w-auto"
+          >
+            <p class="mb-1">
+              <span class="font-semibold">📄 File Name:</span>
+              {{ fileData.file.name }}
+            </p>
+            <p class="mb-1">
+              <span class="font-semibold">📦 Size:</span>
+              {{ (fileData.file.size / 1024).toFixed(2) }} KB
+            </p>
+            <p class="mb-1">
+              <span class="font-semibold">🔢 Rows:</span>
+              {{ filteredRows.length }}
+            </p>
+            <p class="mb-1">
+              <span class="font-semibold">📊 Columns:</span>
+              {{ headers.length }}
+            </p>
+            <p>
+              <span class="font-semibold">🕒 Date:</span>
+              {{ new Date().toLocaleDateString() }}
+            </p>
+          </div>
+        </div>
+        <!-- Data Table -->
+        <div class="overflow-x-auto rounded border border-gray-200 shadow-sm">
+          <DataTable :value="paginatedRows" class="min-w-full">
+            <Column
+              v-for="(header, i) in headers"
+              :key="i"
+              :field="i.toString()"
+              :header="header"
+              :body="(row, column) => row[column.field]"
+            />
+          </DataTable>
+        </div>
+      </div>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import Button from "primevue/button";
@@ -156,9 +191,3 @@ const handleReset = () => {
   currentPage.value = 1;
 };
 </script>
-
-<style scoped>
-.space-y-4 > * + * {
-  margin-top: 1rem;
-}
-</style>
